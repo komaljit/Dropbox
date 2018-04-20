@@ -8,23 +8,20 @@ import {afterlogin} from "../actions/index";
 
 
 class Container extends Component {
-
     state = {
         login: "SI",
         message: ''
     };
-
     login = (userdata) =>{
-
         API.doLogin(userdata)
             .then((res)  => {
 
-                if (res.status == 201) {
+                if (res.status === 201) {
 
                     localStorage.setItem("email", res.email )
                     this.props.history.push("/files");
 
-                } else if (res.status == 401) {
+                } else if (res.status === 401) {
                     this.setState({
 
                         message: "Wrong username or password. Try again..!!"
@@ -34,7 +31,6 @@ class Container extends Component {
     };
 
     loginOrSignup = (data) => {
-
         console.log(data);
         this.setState({
             message:'',
@@ -43,7 +39,6 @@ class Container extends Component {
     };
 
     signUp = (userdata) =>{
-
         API.createUser(userdata)
             .then((status)  => {
                 if (status === 201) {
@@ -64,14 +59,11 @@ class Container extends Component {
     render() {
         return (
             <div className="container-fluid">
-                { this.state.message===''?'':(
+                { this.state.message === ''?'':(
                     <div className="text-danger">
                         {this.state.message}
                     </div>)
                 }
-
-
-                <h1 className="text-center login-title"></h1>
                 <div className="account-wall">
                     <div className="col-md-12">
 
@@ -81,13 +73,10 @@ class Container extends Component {
                             <Login login={this.login} loginOrSignup={this.loginOrSignup}/>
                         }
 
-
                     </div>
                 </div>
             </div>
-
     );
-
 
     }
 }

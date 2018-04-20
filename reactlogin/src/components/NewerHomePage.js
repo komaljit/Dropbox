@@ -37,7 +37,6 @@ class NewerHomePage extends Component {
                     </div>
                 )}/>
 
-
                 <Route exact path="/files" render={() => (
                 //  <FileUpload username={this.state.username}/>
                     <FileUpload/>
@@ -45,20 +44,17 @@ class NewerHomePage extends Component {
 
                 <Route exact path="/userdetails" render={() => (
                     //  <FileUpload username={this.state.username}/>
-
                     <UserDetails/>
                 )}/>
 
                 <Route exact path="/userlog" render={() => (
                     //  <FileUpload username={this.state.username}/>
-
                     <UserLog/>
                 )}/>
             </div>
-
         );
-
     }
 }
+
 
 export default withRouter(NewerHomePage);

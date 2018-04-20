@@ -10,6 +10,7 @@ import {updateUser  } from "../actions/index";
 import { Route, withRouter } from 'react-router-dom';
 import Header from "./Header";
 
+
 class UserDetails extends Component {
 
     componentWillMount(){
@@ -26,7 +27,6 @@ class UserDetails extends Component {
                 }
             });
     }
-
 
     updateUser=(data) => {
         console.log(data)
@@ -51,13 +51,11 @@ class UserDetails extends Component {
 
                 }
             });
-
-    }
+    };
 
     state={firstname:'', lastname:'', email:this.props.userdata.email, contactno:'', interests:'', editClicked:false}
 
     render() {
-
         return (
             <div>
                 <Header/>
@@ -77,7 +75,7 @@ class UserDetails extends Component {
 
                                 <td>
                                     {
-                                    this.state.editClicked == false ? this.props.userdata.firstName :
+                                    this.state.editClicked === false ? this.props.userdata.firstName :
                                         <input type="text" className="form-control" placeholder="First Name" required
                                                autoFocus
                                                onChange={(event) => {
@@ -94,7 +92,7 @@ class UserDetails extends Component {
                                     <td>Last Name:</td>
                                     <td>
                                         {
-                                            this.state.editClicked == false ? this.props.userdata.lastName :
+                                            this.state.editClicked === false ? this.props.userdata.lastName :
                                                 <input type="text" className="form-control" placeholder="Last Name" required
                                                        autoFocus
                                                        onChange={(event) => {
@@ -113,7 +111,7 @@ class UserDetails extends Component {
                                     <td>Contact Number:</td>
                                     <td>
                                         {
-                                            this.state.editClicked == false ? this.props.userdata.contactNo :
+                                            this.state.editClicked === false ? this.props.userdata.contactNo :
                                                 <input type="tel" className="form-control" placeholder="Contact Number" required
                                                        autoFocus
                                                        onChange={(event) => {
@@ -127,7 +125,7 @@ class UserDetails extends Component {
                                 <td>Interests:</td>
                                 <td>
                                     {
-                                        this.state.editClicked == false ? this.props.userdata.interests :
+                                        this.state.editClicked === false ? this.props.userdata.interests :
                                             <textarea type="text" className="form-control" placeholder="Interests" required
                                                       onChange={(event) => {
                                                             this.setState({
@@ -146,7 +144,7 @@ class UserDetails extends Component {
                         <div className="row justify-content-md-center">
 
                             <div className="col-md-5">
-                                {this.state.editClicked == true ?
+                                {this.state.editClicked === true ?
 
                                     <button className="btn btn-primary" type="submit"
                                             onClick={() => this.updateUser(this.state)}>
@@ -172,8 +170,6 @@ class UserDetails extends Component {
 
                 </div>
 
-
-
             </div>
 
             </div>
@@ -194,5 +190,6 @@ function mapDispatchToProps(dispatch) {
         afterlogin : (data) => dispatch(afterlogin(data))
     };
 }
+
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(UserDetails));
