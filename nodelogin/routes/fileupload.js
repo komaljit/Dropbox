@@ -5,37 +5,30 @@ var glob = require('glob');
 var mysql = require('./mysql');
 var fs = require('fs');
 
+
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
-
         cb(null, './public/uploads/')
     },
     filename: function (req, file, cb) {
         // cb(null, file.fieldname + '-' + Date.now() + '.jpeg')
         cb(null, file.originalname)
-
-
     }
 });
+
 
 var upload = multer({storage:storage});
 
 
-
 router.get('/',  function (req, res) {
-
-
     console.log(req.query.filedata);
     var filedata=req.query.filedata;
-
     console.log(filedata);
     res.download(filedata.filepath, filedata.filename);
-
-
 });
 
-router.post('/delete', function (req, res) {
 
+router.post('/delete', function (req, res) {
     console.log(req.body);
     var filename = req.body.file.filename;
     var isfile = req.body.file.isfile;
@@ -52,15 +45,12 @@ router.post('/delete', function (req, res) {
             res.send({status: 401});
         }
         else {
-
             if (results.length > 0) {
-
-
                 var deleteUserFile = "delete from userfiles where filepath = '" + filepath + "'";
                 console.log("Query deleteFile is:" + deleteUserFile);
 
                 var execQuery = 'T';
-                if (isfile == 'F') {
+                if (isfile === 'F') {
                     try {
                         fs.rmdirSync(filepath)
                     }
@@ -75,7 +65,7 @@ router.post('/delete', function (req, res) {
 
                 }
 
-                if (execQuery == 'T') {
+                if (execQuery === 'T') {
                     mysql.executeQuery(function (err) {
                         if (err) {
                             res.send({"status": 401});
@@ -135,7 +125,7 @@ router.post('/upload', upload.single('mypic'), function (req, res) {
     var isfile = req.body.isfile;
 
     if(fileparent)
-        filepath=fileparent+'/'+filename
+        filepath=fileparent+'/'+filename;
     var filedata={
         'filename': filename,
         'filepath':filepath,
@@ -156,7 +146,7 @@ router.post('/upload', upload.single('mypic'), function (req, res) {
 
     mysql.executeQuery(function(err){
         if(err){
-            console.log(err)
+            console.log(err);
             res.send({"status":401});
         }
         else
@@ -167,7 +157,7 @@ router.post('/upload', upload.single('mypic'), function (req, res) {
 
             mysql.executeQuery(function(err){
                 if(err){
-                    console.log(err)
+                    console.log(err);
                    console.log("Error: data not inserted in userfiles")
                 }
                 else
@@ -194,7 +184,7 @@ router.post('/upload', upload.single('mypic'), function (req, res) {
 
                 }
             },userlog);
-            console.log(filedata)
+            console.log(filedata);
 
             res.send({"filedata":filedata, "status":204});
         }
@@ -205,22 +195,13 @@ router.post('/upload', upload.single('mypic'), function (req, res) {
 });
 
 
-
-
-
-
-
 router.post('/makefolder', function (req, res) {
-console.log(req.body)
+    console.log(req.body);
     var splitedemail = req.body.email.split('.')[0];
-
     var filename = req.body.folder.foldername;
-
     var filepath = './public/uploads/'+splitedemail+'/'+filename;
     var fileparent = req.body.folder.fileparent;
     var isfile = req.body.folder.isfile;
-
-
     var folderdata={
         'filename': filename,
         'filepath':filepath,
@@ -243,7 +224,7 @@ console.log(req.body)
 
     mysql.executeQuery(function(err){
         if(err){
-            console.log(err)
+            console.log(err);
             res.send({"status":401});
         }
         else
@@ -254,7 +235,7 @@ console.log(req.body)
 
             mysql.executeQuery(function(err){
                 if(err){
-                    console.log(err)
+                    console.log(err);
                     console.log("Error: data not inserted in userfiles")
                 }
                 else
@@ -283,11 +264,7 @@ console.log(req.body)
             res.send({"folderdata":folderdata, "status":204});
         }
     },insertFile);
-
-
-
 });
-
 
 
 router.post('/sharefile', function (req, res) {
@@ -295,16 +272,11 @@ router.post('/sharefile', function (req, res) {
     console.log(req.body);
     var userEmail=req.body.email;
     var shareEmail= req.body.shareEmail;
-
     var file=req.body.filedata;
-
-
     var filename = file.filename;
     var filepath = file.filepath;
     var fileparent = file.fileparent;
     var isfile = file.isfile;
-
-
     var splitedemail = shareEmail.split('.')[0];
    /* var newfilepath = './public/uploads/' + splitedemail + '/' + file.filename;
 
@@ -352,7 +324,7 @@ router.post('/sharefile', function (req, res) {
                     }
                     else {
 
-                        console.log("userlog inserted....")
+                        console.log("userlog inserted....");
                         res.send({"status": 201, "message": "File shared with the user!"});
                     }
                 }, userlog);
@@ -361,18 +333,11 @@ router.post('/sharefile', function (req, res) {
         }, insertUserFile);
 /*
 
-
-
-
     }
 }, insertFile);
 */
 
-
-
-
 });
-
 
 
 module.exports = router;

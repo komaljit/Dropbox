@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import dropbox from "./dropboxplus.gif";
 
 
+//login class component for dropbox
 class Login extends Component {
 /*
     static propTypes = {

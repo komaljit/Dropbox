@@ -5,8 +5,6 @@ var crypto = require('crypto');
 var fs = require('fs');
 
 
-
-
 /**
  * generates random string of characters i.e salt
  * @function
@@ -63,7 +61,7 @@ router.get('/', function (req, res) {
 
         userlog:[]
 
-    }
+    };
 
     // check user already exists
     var getUser="select * from users where email='"+email+"'";
@@ -114,27 +112,17 @@ router.get('/', function (req, res) {
                             }
                             else
                             {
-
                                 if(results.length > 0){
-
                                     userdetails.userlog=userlogresults;
-
                                 }
-
                                 console.log(userdetails);
                                 res.send({"userdetails":userdetails, "status":201});
-
                             }
 
                         },getUserLog);
-
                     }
 
                 },getFiles);
-
-
-
-
 
             }
             else {
@@ -147,12 +135,10 @@ router.get('/', function (req, res) {
 
 });
 
+
 router.post('/', function (req, res) {
-
     var reqEmail = req.body.email;
-
     var reqPassword = saltHashPassword(req.body.password);
-
     // check user already exists
     var getUser="select * from users where email='"+reqEmail+"' and password='" + reqPassword +"'";
     console.log("Query is:"+getUser);
@@ -179,9 +165,8 @@ router.post('/', function (req, res) {
                     }
                     else
                     {
-                        console.log("last login inserted....")
+                        console.log("last login inserted....");
                         res.send({"status":201, "email" :reqEmail});
-
                     }
                 },insertUser);
             }
@@ -197,16 +182,12 @@ router.post('/', function (req, res) {
 
 
 router.post('/signup', function (req, res) {
-
-
     var reqPassword = saltHashPassword(req.body.password);
     var reqfirstname = req.body.firstName;
     var reqlastname = req.body.lastName;
     var reqemail = req.body.email;
     //var reqcontact = req.body.contactNo;
    // var reqinterests = req.body.interests;
-
-
     var insertUser="insert into users (firstname, lastname, password, email) values ( '"+reqfirstname
         +"' ,'" + reqlastname +"','" +
         reqPassword+ "','" + reqemail+"')";
@@ -228,11 +209,8 @@ router.post('/signup', function (req, res) {
                 fs.mkdirSync(dir);
             }
             res.status(201).json({message: "User Details Saved successfully"});
-
         }
     },insertUser);
-
-
 });
 
 
@@ -244,8 +222,6 @@ console.log(req.body)
     var contact = req.body.contactno;
     var interests = req.body.interests;
     var email = req.body.email;
-
-
     var updateUser="update users set firstname = "+"'"+ firstname+"'"+", lastname="+ "'"+lastname+"'"+", contact="+
         "'"+contact+"'"+", interests="+"'"+interests+"'"+" where email="+"'"+email+"'";
 
@@ -263,18 +239,15 @@ console.log(req.body)
 
         }
     },updateUser);
-
-
 });
 
 
 //Logout the user - invalidate the session
 router.post('/logout', function (req, res) {
-
     req.session.destroy();
     console.log('Session destroyed');
     res.status(201).send();
-
 });
+
 
 module.exports = router;
