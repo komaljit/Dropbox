@@ -1,10 +1,7 @@
 import React, {Component} from 'react';
 import { Route, withRouter } from 'react-router-dom';
-import * as API from '../api/API';
 import '../Login.css';
-import SignUp from "./SignUp";
 import FileUpload from "./FileUpload";
-import Login from "./Login";
 import Container from "./Container";
 import UserDetails from "./UserDetails";
 import UserLog from "./UserLog";
@@ -37,24 +34,27 @@ class NewerHomePage extends Component {
                     </div>
                 )}/>
 
-                <Route exact path="/files" render={() => (
-                //  <FileUpload username={this.state.username}/>
-                    <FileUpload/>
+                <Route exact path="/files"
+                       render={() => (
+                           localStorage.getItem("email") ?
+                            <FileUpload/> :
+                           <Container />
                 )}/>
 
                 <Route exact path="/userdetails" render={() => (
-                    //  <FileUpload username={this.state.username}/>
-                    <UserDetails/>
+                    localStorage.getItem("email") ?
+                        <UserDetails/> :
+                        <Container />
                 )}/>
 
                 <Route exact path="/userlog" render={() => (
-                    //  <FileUpload username={this.state.username}/>
-                    <UserLog/>
+                    localStorage.getItem("email") ?
+                        <UserLog/> :
+                        <Container />
                 )}/>
             </div>
         );
     }
 }
-
 
 export default withRouter(NewerHomePage);

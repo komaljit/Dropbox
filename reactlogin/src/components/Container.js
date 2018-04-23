@@ -4,7 +4,6 @@ import * as API from '../api/API';
 import '../Login.css';
 import SignUp from "./SignUp";
 import Login from "./Login";
-import {afterlogin} from "../actions/index";
 
 
 class Container extends Component {
@@ -15,15 +14,11 @@ class Container extends Component {
     login = (userdata) =>{
         API.doLogin(userdata)
             .then((res)  => {
-
                 if (res.status === 201) {
-
-                    localStorage.setItem("email", res.email )
+                    localStorage.setItem("email", res.email );
                     this.props.history.push("/files");
-
                 } else if (res.status === 401) {
                     this.setState({
-
                         message: "Wrong username or password. Try again..!!"
                     });
                 }
@@ -42,14 +37,11 @@ class Container extends Component {
         API.createUser(userdata)
             .then((status)  => {
                 if (status === 201) {
-
                     this.setState({
-
                         message: "User details saved successfully!"
                     });
                 } else if (status === 401) {
                     this.setState({
-
                         message: "Email already exists!"
                     });
                 }
@@ -80,6 +72,5 @@ class Container extends Component {
 
     }
 }
-
 
 export default withRouter(Container);

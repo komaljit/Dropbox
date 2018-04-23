@@ -1,13 +1,13 @@
 
-var mysql = require('mysql');
+const mysql = require('mysql');
 
 //Put your mysql configuration settings - user, password, database and port
 // function getConnection(){
     //var connection = mysql.createConnection({
-    var pool  = mysql.createPool({
+    const pool  = mysql.createPool({
         host     : 'localhost',
         user     : 'root',
-        password : 'komaljit',
+        password : '1234',
         database : 'cmpe273',
         port	 : 3306
     });

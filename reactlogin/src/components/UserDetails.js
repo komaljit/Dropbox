@@ -1,8 +1,6 @@
 import React, {Component} from 'react';
 import * as API from '../api/API';
 import '../Login.css';
-import PropTypes from 'prop-types';
-import dropbox from "./dropboxplus.gif";
 import {connect} from 'react-redux';
 import {Row,Col,ListGroupItem} from 'react-bootstrap';
 import {afterlogin} from "../actions/index";
@@ -14,27 +12,27 @@ import Header from "./Header";
 class UserDetails extends Component {
 
     componentWillMount(){
-        const data=localStorage.getItem("email")
+        const data=localStorage.getItem("email");
         API.getState(data)
             .then((res) => {
-                console.log(res)
-                if (res.status == 201) {
+                console.log(res);
+                if (res.status === 201) {
                     this.props.afterlogin(res.userdetails);
                     console.log("Success...")
 
-                }else if (res.status == 401) {
+                }else if (res.status === 401) {
 
                 }
             });
     }
 
     updateUser=(data) => {
-        console.log(data)
+        console.log(data);
         data.email=this.props.userdata.email;
         API.updateUser(data)
             .then((status) => {
 
-                if (status == 201) {
+                if (status === 201) {
 
                     this.props.updateUser(data);
                     this.setState({
@@ -43,7 +41,7 @@ class UserDetails extends Component {
                     });
 
 
-                }else if (status == 401) {
+                }else if (status === 401) {
                     this.setState({
                         editClicked:false,
                         message: "Error in updating user details!"
@@ -180,7 +178,7 @@ class UserDetails extends Component {
 
 
 function mapStateToProps(userdata) {
-console.log(userdata)
+console.log(userdata);
     return {userdata};
 }
 

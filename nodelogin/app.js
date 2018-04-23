@@ -1,16 +1,16 @@
-var express = require('express');
-var path = require('path');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-var cors = require('cors');
+const express = require('express');
+const path = require('path');
+const logger = require('morgan');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
+const cors = require('cors');
 
-var index = require('./routes/index');
-var users = require('./routes/users');
-var fileupload = require('./routes/fileupload');
-var session = require('client-sessions');
+const index = require('./routes/index');
+const users = require('./routes/users');
+const fileupload = require('./routes/fileupload');
+let session = require('client-sessions');
 
-var app = express();
+const app = express();
 
 app.use(session({
     cookieName: 'session',
@@ -24,12 +24,12 @@ app.set('view engine', 'jade');
 
 
 
-var corsOptions = {
+let corsOptions = {
     origin: 'http://localhost:3000',
     credentials: true,
     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
-}
-app.use(cors(corsOptions))
+};
+app.use(cors(corsOptions));
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -47,7 +47,7 @@ app.use('./public/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
-    var err = new Error('Not Found');
+    let err = new Error('Not Found');
     err.status = 404;
     next(err);
 });

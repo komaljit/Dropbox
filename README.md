@@ -1,4 +1,4 @@
-# Dropbox
+# Dropbox Protoype
 Tech Stack- Node.js, React, HTML, CSS, Bootstrap, Mysql
 
 Open msql.js present in folder dropbox/nodelogin/routes. Change db username and password as per your mysql DB credentials.

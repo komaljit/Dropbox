@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import * as API from '../api/API';
 import FileGridList from "./FileGridList";
 import TextField from 'material-ui/TextField';
-import Typography from 'material-ui/Typography';
+//import Typography from 'material-ui/Typography';
 import {connect} from 'react-redux';
 import {addFile} from "../actions/index";
 import {deleteFile} from "../actions/index";
@@ -21,17 +21,15 @@ class FileUpload extends Component {
     };
 
     componentWillMount(){
-        const data=localStorage.getItem("email")
+        const data=localStorage.getItem("email");
         API.getState(data)
             .then((res) => {
 
-                if (res.status == 201) {
+                if (res.status === 201) {
                     this.props.afterlogin(res.userdetails);
                     console.log("Success...")
-
-                }else if (res.status == 401) {
+                }else if (res.status === 401) {
                     this.setState({
-
                         message: "Folder error"
                     });
                 }
@@ -50,14 +48,14 @@ class FileUpload extends Component {
         API.uploadFile(payload)
         .then((res) => {
 
-            if (res.status == 204) {
+            if (res.status === 204) {
 
                 this.props.addFile(res.filedata);
                 this.setState({
 
                     message: "File uploaded successfully"
                 });
-            }else if (res.status == 401) {
+            }else if (res.status === 401) {
                 this.setState({
 
                     message: "File error"
@@ -68,25 +66,25 @@ class FileUpload extends Component {
 
     deleteFile=(index, file) => {
 
-        const fileData={file:file, email:this.props.userdata.email}
+        const fileData={file:file, email:this.props.userdata.email};
         API.deleteFile(fileData)
             .then((res) => {
 
-                if (res.status == 204) {
+                if (res.status === 204) {
 
-                    console.log("Delete success")
+                    console.log("Delete success");
                     this.props.deleteFile(index);
                     this.setState({
 
                         message: "File deleted successfully"
                     });
-                }else if (res.status == 401) {
+                }else if (res.status === 401) {
                     this.setState({
 
                         message: res.message
                     });
                 }
-                else if (res.status == 402) {
+                else if (res.status === 402) {
                     this.setState({
 
                         message: res.message
@@ -94,15 +92,15 @@ class FileUpload extends Component {
                 }
             });
 
-    }
+    };
 
     makeFolder=(folder) => {
 
-        const folderData={folder:folder, email:this.props.userdata.email}
+        const folderData={folder:folder, email:this.props.userdata.email};
         API.makeFolder(folderData)
             .then((res) => {
 
-                if (res.status == 204) {
+                if (res.status === 204) {
 
                     this.props.addFile(res.folderdata);
                     this.setState({
@@ -110,7 +108,7 @@ class FileUpload extends Component {
                         message: "folder created successfully"
                     });
 
-                }else if (res.status == 401) {
+                }else if (res.status === 401) {
                     this.setState({
 
                         message: "Folder error"
@@ -118,30 +116,30 @@ class FileUpload extends Component {
                 }
             });
 
-    }
+    };
 
     sharefile=(filedata) => {
 
 
-        var emailList=filedata.shareEmail.trim().split(';');
+        let emailList=filedata.shareEmail.trim().split(';');
 
-        console.log(emailList)
+        console.log(emailList);
 
-        for (var key in emailList) {
+        for (let key in emailList) {
 
-            const data = {filedata: filedata.file, shareEmail: emailList[key], email: this.props.userdata.email}
+            const data = {filedata: filedata.file, shareEmail: emailList[key], email: this.props.userdata.email};
 
             API.shareFile(data)
                 .then((res) => {
 
-                    if (res.status == 201) {
+                    if (res.status === 201) {
                         this.setState({
 
                             message: "File Shared with "+data.shareEmail
                         });
                         console.log("Success...")
 
-                    } else if (res.status == 401) {
+                    } else if (res.status === 401) {
                         this.setState({
 
                             message: res.message
@@ -150,26 +148,26 @@ class FileUpload extends Component {
                 });
         }
 
-    }
+    };
 
     makeSharedFolder=(data) => {
-console.log(data)
-        const folderData={folder:data, email:this.props.userdata.email}
+console.log(data);
+        const folderData={folder:data, email:this.props.userdata.email};
         API.makeFolder(folderData)
             .then((res) => {
 
-                console.log(res.folderdata)
-                if (res.status == 204) {
+                console.log(res.folderdata);
+                if (res.status ===  204) {
 
                     this.props.addFile(res.folderdata);
-                    const shareddata={file:res.folderdata, shareEmail:data.shareEmail}
-                    this.sharefile(shareddata)
+                    const shareddata={file:res.folderdata, shareEmail:data.shareEmail};
+                    this.sharefile(shareddata);
                     this.setState({
 
                         message: "folder created successfully"
                     });
 
-                }else if (res.status == 401) {
+                }else if (res.status === 401) {
                     this.setState({
 
                         message: "Folder error"
@@ -177,43 +175,33 @@ console.log(data)
                 }
             });
 
-    }
+    };
 
 
     openFileFolder=(filedata) =>{
 
-        if(filedata.isfile=='F'){
+        if(filedata.isfile === 'F'){
 
             this.setState({
                 fileparent:filedata.filepath
             });
 
         }
-
-
         else{
-
-
             API.getFile(filedata)
                 .then((res) => {
                     console.log("hello");
                 console.log(res);
 
-
                 });
         }
         console.log(this.state.fileparent);
-
-    }
+    };
 
     render() {
 
-
         console.log(this.state.fileparent);
         return (
-
-
-
             <div className="container-fluid">
                 <Header/>
 
@@ -222,7 +210,6 @@ console.log(data)
                         {this.state.message}
                     </div>)
                 }
-
             <div className="jumbotron">
 
                 <div className="row justify-content-md-center">
@@ -253,7 +240,6 @@ console.log(data)
 
                     <div className="row">
                         <LeftNavBar userdetails={this.userdetails}/>
-                        <div className="col-sm-1 "></div>
                         <FileGridList files={this.props.userdata.files}
                                       deleteFile={this.deleteFile}
                                       sharefile={this.sharefile}
@@ -276,8 +262,6 @@ console.log(data)
         );
     }
 }
-
-
 
 function mapStateToProps(userdata) {
 

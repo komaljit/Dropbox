@@ -1,8 +1,8 @@
-var express = require('express');
-var router = express.Router();
-var mysql = require('./mysql');
-var crypto = require('crypto');
-var fs = require('fs');
+const express = require('express');
+const router = express.Router();
+const mysql = require('./mysql');
+const crypto = require('crypto');
+const fs = require('fs');
 
 
 /**
@@ -10,7 +10,19 @@ var fs = require('fs');
  * @function
  * @param {number} length - Length of the random string.
  */
-var genRandomString = function(length){
+
+
+const sha512 = function(password, salt){
+    let hash = crypto.createHmac('sha512', salt); /** Hashing algorithm sha512 */
+    hash.update(password);
+    let value = hash.digest('hex');
+    return {
+        salt:salt,
+        passwordHash:value
+    };
+};
+
+const genRandomString = function(length){
     return crypto.randomBytes(Math.ceil(length/2))
         .toString('hex') /** convert to hexadecimal format */
         .slice(0,length);   /** return required number of characters */
@@ -22,31 +34,22 @@ var genRandomString = function(length){
  * @param {string} password - List of required fields.
  * @param {string} salt - Data to be validated.
  */
-var sha512 = function(password, salt){
-    var hash = crypto.createHmac('sha512', salt); /** Hashing algorithm sha512 */
-    hash.update(password);
-    var value = hash.digest('hex');
-    return {
-        salt:salt,
-        passwordHash:value
-    };
-};
+
 
 function saltHashPassword(userpassword) {
-    var salt = genRandomString(16); /** Gives us salt of length 16 */
-    var passwordData = sha512(userpassword, salt);
+    let salt = genRandomString(16); /** Gives us salt of length 16 *;
    /* console.log('UserPassword = '+userpassword);
     console.log('Passwordhash = '+passwordData.passwordHash);
     console.log('nSalt = '+passwordData.salt);*/
-    return passwordData;
+    return sha512(userpassword, salt);
 }
 
 /* GET users listing. */
 router.get('/', function (req, res) {
     console.log(req.query);
-    var email=req.query.email;
+    let email=req.query.email;
 
-    var userdetails={
+    let userdetails={
         firstname: '',
         lastname: '',
         password: '',
@@ -64,7 +67,7 @@ router.get('/', function (req, res) {
     };
 
     // check user already exists
-    var getUser="select * from users where email='"+email+"'";
+    let getUser="select * from users where email='"+email+"'";
     console.log("Query is:"+getUser);
 
     mysql.fetchData(function(err,results){
@@ -86,7 +89,7 @@ router.get('/', function (req, res) {
                 userdetails.interests=results[0].interests;
                 userdetails.lastlogin=results[0].lastlogin;
 
-                var getFiles="select distinct f.* from files f, userfiles u where u.email='"+email+"' " +
+                let getFiles="select distinct f.* from files f, userfiles u where u.email='"+email+"' " +
                                 "and (f.filepath=u.filepath or u.filepath=f.fileparent)";
                 console.log("Query is:"+getUser);
 
@@ -103,7 +106,7 @@ router.get('/', function (req, res) {
 
                         }
 
-                        var getUserLog="select * from userlog where email='"+email+"'";
+                        let getUserLog="select * from userlog where email='"+email+"'";
                         console.log("Query is:"+getUserLog);
 
                         mysql.fetchData(function(err,userlogresults){
@@ -137,17 +140,15 @@ router.get('/', function (req, res) {
 
 
 router.post('/', function (req, res) {
-    var reqEmail = req.body.email;
-    var reqPassword = saltHashPassword(req.body.password);
+    let reqEmail = req.body.email;
+    let reqPassword = saltHashPassword(req.body.password);
     // check user already exists
-    var getUser="select * from users where email='"+reqEmail+"' and password='" + reqPassword +"'";
+    let getUser="select * from users where email='"+reqEmail+"' and password='" + reqPassword +"'";
     console.log("Query is:"+getUser);
 
     mysql.fetchData(function(err,results){
         if(err){
             throw err;
-
-            res.send({status:401});
         }
         else
         {
@@ -156,7 +157,7 @@ router.post('/', function (req, res) {
                 req.session.email = reqEmail;
                 console.log("valid Login");
 
-                var insertUser="update users  set lastlogin = NOW() where email='"+reqEmail+"'";
+                let insertUser="update users  set lastlogin = NOW() where email='"+reqEmail+"'";
 
 
                 mysql.executeQuery(function(err){
@@ -182,13 +183,13 @@ router.post('/', function (req, res) {
 
 
 router.post('/signup', function (req, res) {
-    var reqPassword = saltHashPassword(req.body.password);
-    var reqfirstname = req.body.firstName;
-    var reqlastname = req.body.lastName;
-    var reqemail = req.body.email;
+    let reqPassword = saltHashPassword(req.body.password);
+    let reqfirstname = req.body.firstName;
+    let reqlastname = req.body.lastName;
+    let reqemail = req.body.email;
     //var reqcontact = req.body.contactNo;
    // var reqinterests = req.body.interests;
-    var insertUser="insert into users (firstname, lastname, password, email) values ( '"+reqfirstname
+    let insertUser="insert into users (firstname, lastname, password, email) values ( '"+reqfirstname
         +"' ,'" + reqlastname +"','" +
         reqPassword+ "','" + reqemail+"')";
 
@@ -200,9 +201,9 @@ router.post('/signup', function (req, res) {
         }
         else
         {
-            var fs = require('fs');
-            var splitemail=reqemail.split('.')[0];
-            var dir = './public/uploads/'+splitemail;
+            let fs = require('fs');
+            let splitemail=reqemail.split('.')[0];
+            let dir = './public/uploads/'+splitemail;
 
             if (!fs.existsSync(dir)){
 
@@ -216,13 +217,13 @@ router.post('/signup', function (req, res) {
 
 
 router.post('/updateuser', function (req, res) {
-console.log(req.body)
-    var firstname = req.body.firstname;
-    var lastname = req.body.lastname;
-    var contact = req.body.contactno;
-    var interests = req.body.interests;
-    var email = req.body.email;
-    var updateUser="update users set firstname = "+"'"+ firstname+"'"+", lastname="+ "'"+lastname+"'"+", contact="+
+    console.log(req.body);
+    let firstname = req.body.firstname;
+    let lastname = req.body.lastname;
+    let contact = req.body.contactno;
+    let interests = req.body.interests;
+    let email = req.body.email;
+    let updateUser="update users set firstname = "+"'"+ firstname+"'"+", lastname="+ "'"+lastname+"'"+", contact="+
         "'"+contact+"'"+", interests="+"'"+interests+"'"+" where email="+"'"+email+"'";
 
     console.log("Query is:"+updateUser);

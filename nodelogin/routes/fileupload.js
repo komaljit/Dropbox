@@ -1,12 +1,12 @@
-var express = require('express');
-var router = express.Router();
-var multer = require('multer');
-var glob = require('glob');
-var mysql = require('./mysql');
-var fs = require('fs');
+const express = require('express');
+const router = express.Router();
+const multer = require('multer');
+const glob = require('glob');
+const mysql = require('./mysql');
+const fs = require('fs');
 
 
-var storage = multer.diskStorage({
+const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, './public/uploads/')
     },
@@ -17,12 +17,12 @@ var storage = multer.diskStorage({
 });
 
 
-var upload = multer({storage:storage});
+const upload = multer({storage:storage});
 
 
 router.get('/',  function (req, res) {
     console.log(req.query.filedata);
-    var filedata=req.query.filedata;
+    let filedata=req.query.filedata;
     console.log(filedata);
     res.download(filedata.filepath, filedata.filename);
 });
@@ -30,26 +30,24 @@ router.get('/',  function (req, res) {
 
 router.post('/delete', function (req, res) {
     console.log(req.body);
-    var filename = req.body.file.filename;
-    var isfile = req.body.file.isfile;
-    var filepath= req.body.file.filepath;
-    var email=req.body.email;
+    let filename = req.body.file.filename;
+    let isfile = req.body.file.isfile;
+    let filepath= req.body.file.filepath;
+    let email=req.body.email;
 
-    var findAdmin="select * from userfiles where email='"+email+"' and filepath='"+filepath+"' and admin='T'";
+    let findAdmin="select * from userfiles where email='"+email+"' and filepath='"+filepath+"' and admin='T'";
     console.log("Query is:"+findAdmin);
 
     mysql.fetchData(function(err,results) {
         if (err) {
             throw err;
-
-            res.send({status: 401});
         }
         else {
             if (results.length > 0) {
-                var deleteUserFile = "delete from userfiles where filepath = '" + filepath + "'";
+                let deleteUserFile = "delete from userfiles where filepath = '" + filepath + "'";
                 console.log("Query deleteFile is:" + deleteUserFile);
 
-                var execQuery = 'T';
+                let execQuery = 'T';
                 if (isfile === 'F') {
                     try {
                         fs.rmdirSync(filepath)
@@ -71,7 +69,7 @@ router.post('/delete', function (req, res) {
                             res.send({"status": 401});
                         }
                         else {
-                            var deleteFile = "delete from files where filepath = '" + filepath + "'";
+                            let deleteFile = "delete from files where filepath = '" + filepath + "'";
                             console.log("Query deleteFile is:" + deleteFile);
 
 
@@ -117,16 +115,16 @@ router.post('/delete', function (req, res) {
 
 router.post('/upload', upload.single('mypic'), function (req, res) {
 
-    var splitedemail = req.body.email.split('.')[0];
+    let splitedemail = req.body.email.split('.')[0];
     console.log(req.body);
-    var filename = req.file.filename;
-    var filepath = './public/uploads/'+splitedemail+'/'+req.file.filename;
-    var fileparent = req.body.fileparent;
-    var isfile = req.body.isfile;
+    let filename = req.file.filename;
+    let filepath = './public/uploads/'+splitedemail+'/'+req.file.filename;
+    let fileparent = req.body.fileparent;
+    let isfile = req.body.isfile;
 
     if(fileparent)
         filepath=fileparent+'/'+filename;
-    var filedata={
+    let filedata={
         'filename': filename,
         'filepath':filepath,
         'fileparent': fileparent,
@@ -138,7 +136,7 @@ router.post('/upload', upload.single('mypic'), function (req, res) {
     fs.createReadStream('./public/uploads/'+req.file.filename).pipe(fs.createWriteStream(filepath));
 
     // check user already exists
-    var insertFile="insert into files (filename, filepath, fileparent, isfile) values ( '"+filename
+    let insertFile="insert into files (filename, filepath, fileparent, isfile) values ( '"+filename
         +"' ,'" + filepath+"' ,'" + fileparent+"','" + isfile+"')";
 
     console.log("Query is:"+insertFile);
@@ -151,7 +149,7 @@ router.post('/upload', upload.single('mypic'), function (req, res) {
         }
         else
         {
-            var insertUserFile="insert into userfiles  (filepath, email, admin)  values ( '"+filepath+"' ,'" + req.body.email+"' ,'T')";
+            let insertUserFile="insert into userfiles  (filepath, email, admin)  values ( '"+filepath+"' ,'" + req.body.email+"' ,'T')";
             console.log("Query insertUserFile is:"+insertUserFile);
 
 
@@ -168,14 +166,14 @@ router.post('/upload', upload.single('mypic'), function (req, res) {
             },insertUserFile);
 
 
-            var userlog="insert into userlog (filename, filepath, isfile, email, action, actiontime) values ( '"+filename
+            let userlog="insert into userlog (filename, filepath, isfile, email, action, actiontime) values ( '"+filename
                 +"' ,'" + filepath +"','"+ isfile +"','" + req.body.email +"','" +
                 "File Upload"+ "',NOW())";
 
 
             mysql.executeQuery(function(err){
                 if(err){
-                    console.log(err)
+                    console.log(err);
                     console.log("Error inserting userlog....")
                 }
                 else
@@ -197,26 +195,26 @@ router.post('/upload', upload.single('mypic'), function (req, res) {
 
 router.post('/makefolder', function (req, res) {
     console.log(req.body);
-    var splitedemail = req.body.email.split('.')[0];
-    var filename = req.body.folder.foldername;
-    var filepath = './public/uploads/'+splitedemail+'/'+filename;
-    var fileparent = req.body.folder.fileparent;
-    var isfile = req.body.folder.isfile;
-    var folderdata={
+    let splitedemail = req.body.email.split('.')[0];
+    let filename = req.body.folder.foldername;
+    let filepath = './public/uploads/'+splitedemail+'/'+filename;
+    let fileparent = req.body.folder.fileparent;
+    let isfile = req.body.folder.isfile;
+    let folderdata={
         'filename': filename,
         'filepath':filepath,
         'fileparent': fileparent,
         'isfile': isfile
     };
 
-    var dir = './public/uploads/'+splitedemail+'/'+filename;
+    let dir = './public/uploads/'+splitedemail+'/'+filename;
 
     if (!fs.existsSync(dir)){
 
         fs.mkdirSync(dir);
     }
     // check user already exists
-    var insertFile="insert into files (filename, filepath, fileparent, isfile) values ( '"+filename
+    let insertFile="insert into files (filename, filepath, fileparent, isfile) values ( '"+filename
         +"' ,'" + filepath+"' ,'" + fileparent+"','" + isfile+"')";
 
     console.log("Query is:"+insertFile);
@@ -229,7 +227,7 @@ router.post('/makefolder', function (req, res) {
         }
         else
         {
-            var insertUserFile="insert into userfiles  (filepath, email, admin)  values ( '"+filepath+"' ,'" + req.body.email+"' ,'T')";
+            let insertUserFile="insert into userfiles  (filepath, email, admin)  values ( '"+filepath+"' ,'" + req.body.email+"' ,'T')";
             console.log("Query insertUserFile is:"+insertUserFile);
 
 
@@ -245,7 +243,7 @@ router.post('/makefolder', function (req, res) {
                 }
             },insertUserFile);
 
-            var userlog="insert into userlog (filename, filepath, isfile, email, action, actiontime) values ( '"+filename
+            let userlog="insert into userlog (filename, filepath, isfile, email, action, actiontime) values ( '"+filename
                 +"' ,'" + filepath +"','"+ isfile +"','" + req.body.email +"','" +
                 "Make Folder "+ "',NOW())";
 
@@ -270,14 +268,14 @@ router.post('/makefolder', function (req, res) {
 router.post('/sharefile', function (req, res) {
 
     console.log(req.body);
-    var userEmail=req.body.email;
-    var shareEmail= req.body.shareEmail;
-    var file=req.body.filedata;
-    var filename = file.filename;
-    var filepath = file.filepath;
-    var fileparent = file.fileparent;
-    var isfile = file.isfile;
-    var splitedemail = shareEmail.split('.')[0];
+    let userEmail=req.body.email;
+    let shareEmail= req.body.shareEmail;
+    let file=req.body.filedata;
+    let filename = file.filename;
+    let filepath = file.filepath;
+    let fileparent = file.fileparent;
+    let isfile = file.isfile;
+    let splitedemail = shareEmail.split('.')[0];
    /* var newfilepath = './public/uploads/' + splitedemail + '/' + file.filename;
 
     console.log(newfilepath)
@@ -301,7 +299,7 @@ router.post('/sharefile', function (req, res) {
         else {
 
    */
-        var insertUserFile = "insert into userfiles  (filepath, email)  values ( '" + filepath + "' ,'" + shareEmail + "')";
+        let insertUserFile = "insert into userfiles  (filepath, email)  values ( '" + filepath + "' ,'" + shareEmail + "')";
         console.log("Query insertUserFile is:" + insertUserFile);
 
 
@@ -311,9 +309,9 @@ router.post('/sharefile', function (req, res) {
             }
             else {
 
-                console.log("data inserted in userfiles")
+                console.log("data inserted in userfiles");
 
-                var userlog = "insert into userlog (filename, filepath, isfile, email, action, actiontime) values ( '" + filename
+                let userlog = "insert into userlog (filename, filepath, isfile, email, action, actiontime) values ( '" + filename
                     + "' ,'" + filepath + "','" + isfile + "','" + userEmail + "','" +
                     "File Shared with " + shareEmail + "',NOW())";
 

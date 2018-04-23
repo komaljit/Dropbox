@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import '../Login.css';
-import PropTypes from 'prop-types';
+//import PropTypes from 'prop-types';
 import dropbox from "./dropboxplus.gif";
 
 
@@ -44,10 +44,8 @@ class Login extends Component {
                 </button>
                 <br/>
 
-                <a href="" className="pull-right need-help"
-                >Need help? </a><span className="clearfix"></span>
+                <a href="" className="pull-right need-help">Need help? </a>
                 <a href="#" className="text-center new-account" onClick={() => this.props.loginOrSignup("SU")}>Create New User</a>
-
 
             </div>
         );

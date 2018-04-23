@@ -1,15 +1,14 @@
 import React, {Component} from 'react';
 import { Route, withRouter } from 'react-router-dom';
-import * as API from '../api/API';
+//import * as API from '../api/API';
 import '../Login.css';
 import PropTypes from 'prop-types';
-import NewerHomePage from "./NewerHomePage";
 
 
 class SignUp extends Component {
-    /*static propTypes = {
+    static propTypes = {
         signUp: PropTypes.func.isRequired
-    };*/
+    };
 
     state = {
         firstName:'',

@@ -15,9 +15,9 @@ class RightNavBar extends Component {
     closeModal(data) {
         console.log(data);
 
-        {data!=""?
+        {data !== ""?
 
-            ( data.foldername!="" ?(data.shareEmail!=""? this.props.makeSharedFolder(data):this.props.makeFolder(data))
+            ( data.foldername !== "" ?(data.shareEmail !== ""? this.props.makeSharedFolder(data):this.props.makeFolder(data))
             :''):''}
 
         this.setState({ isModalOpen: false, clickSharedFolder: false})
@@ -39,7 +39,7 @@ class RightNavBar extends Component {
     };
 
     render(){
-console.log(this.props.parentFile)
+console.log(this.props.parentFile);
         return(
         <div className="col-sm-2 sidenav">
             { this.props.parentFile === ""?

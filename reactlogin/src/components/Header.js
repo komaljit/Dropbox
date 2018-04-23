@@ -8,24 +8,18 @@ import dropboxtitle from "./Dropbox_Log.png";
 class Header extends Component {
 
     logout=() => {
-
         API.logout()
             .then((status) => {
-
-                if (status == 201) {
-
-                    console.log("logout success")
+                if (status === 201) {
+                    console.log("logout success");
                     localStorage.setItem("email", "");
                     this.props.history.push("/")
-                }else if (status == 401) {
-
-
+                }else if (status === 401) {
                         console.log("logout issue")
-
                 }
             });
+    };
 
-    }
     render() {
         return (
             <div>
@@ -54,7 +48,6 @@ class Header extends Component {
             </div>
 
         );
-
     }
 }
 

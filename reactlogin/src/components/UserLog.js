@@ -1,8 +1,6 @@
 import React, {Component} from 'react';
 import * as API from '../api/API';
 import '../Login.css';
-import PropTypes from 'prop-types';
-import dropbox from "./dropboxplus.gif";
 import {connect} from 'react-redux';
 import {Row,Col,ListGroupItem} from 'react-bootstrap';
 import {afterlogin} from "../actions/index";
@@ -17,15 +15,15 @@ import "react-table/react-table.css";
 class UserLog extends Component {
 
     componentWillMount(){
-        const data=localStorage.getItem("email")
+        const data=localStorage.getItem("email");
         API.getState(data)
             .then((res) => {
-                console.log(res)
-                if (res.status == 201) {
+                console.log(res);
+                if (res.status === 201) {
                     this.props.afterlogin(res.userdetails);
                     console.log("Success...")
 
-                }else if (res.status == 401) {
+                }else if (res.status === 401) {
                     this.setState({
 
                         message: "Folder error"
@@ -35,7 +33,7 @@ class UserLog extends Component {
     }
 
     render() {
-        console.log(this.props.userdata.userLog)
+        console.log(this.props.userdata.userLog);
         return (
             <div>
                 <Header/>

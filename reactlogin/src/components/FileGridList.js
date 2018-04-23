@@ -9,20 +9,15 @@ import "react-table/react-table.css";
 
 
 class FileGridList extends Component {
-
-
-
-    state = { isModalOpen: false, shareEmail:'', file:'' , group:[], downloadLink:''}
+    state = { isModalOpen: false, shareEmail:'', file:'' , group:[], downloadLink:''};
     openModal(file, downloadLink) {
         this.setState({ isModalOpen: true , file: file, downloadLink:downloadLink, showLink:false})
     }
 
     closeModal(data) {
         console.log(data);
-
-        {data!=""?
-
-            ( data.shareEmail!=""?this.props.sharefile(data):'')
+        {data !== ""?
+            ( data.shareEmail !== ""?this.props.sharefile(data):'')
             :''}
         this.setState({ isModalOpen: false, showLink: true })
     }
@@ -43,8 +38,6 @@ class FileGridList extends Component {
     };
 
     render(){
-
-
     return (
 
         <div className="col-sm-6">
@@ -63,20 +56,20 @@ class FileGridList extends Component {
 
                     {this.props.files.map((file, index) => {
 
-                        if(file.fileparent==this.props.parentFile) {
-                            var downloadlink="http://localhost:3001/uploads/"+this.props.userEmail.split('.')[0]+"/"+file.filename
+                        if(file.fileparent === this.props.parentFile) {
+                            let downloadlink="http://localhost:3001/uploads/"+this.props.userEmail.split('.')[0]+"/"+file.filename
                             return (
                                 <tr className="justify-content-md-left">
 
                                     <td>
-                                        {file.isfile=='T'?
+                                        {file.isfile === 'T'?
                                         <span className="fa fa-file"></span>:
                                         <span className="fa fa-folder"></span>
                                         }
                                     </td>
                                     <td>
 
-                                        {file.isfile == 'F' ?
+                                        {file.isfile === 'F' ?
 
                                             <a href="#" className="link-title "
                                                onClick={() => this.props.openFileFolder(file)}>
@@ -139,12 +132,10 @@ class FileGridList extends Component {
                         <Row className="show-grid">
 
                                 {
-                                    this.state.showLink==true?
+                                    this.state.showLink === true?
                                         <h6><small>{this.state.downloadLink}</small></h6>
                                         :''
                                 }
-
-
                         </Row>
 
                     </ListGroupItem>
@@ -161,18 +152,11 @@ class FileGridList extends Component {
 
                     </div>
 
-
-
                 </Modal>
 
-
         </div>
-
-
         );
     }
-
-
 }
 
 
