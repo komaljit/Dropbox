@@ -1,4 +1,3 @@
-
 const mysql = require('mysql');
 
 //Put your mysql configuration settings - user, password, database and port
@@ -14,13 +13,9 @@ const mysql = require('mysql');
     /*return connection;
 }*/
 
-
 function fetchData(callback,sqlQuery){
-
     console.log("\nSQL Query::"+sqlQuery);
-
     pool.getConnection(function(err,connection) {
-
         connection.query(sqlQuery, function (err, rows, fields) {
             if (err) {
                 console.log("ERROR: " + err.message);
@@ -36,12 +31,8 @@ function fetchData(callback,sqlQuery){
 }
 
 function executeQuery(callback, sqlQuery){
-
     console.log("\nSQL Query::"+sqlQuery);
-
-
     pool.getConnection(function(err,connection) {
-
         connection.query(sqlQuery, function (err, result) {
             callback(err);
         });
@@ -50,9 +41,5 @@ function executeQuery(callback, sqlQuery){
     });
 }
 
-
 exports.fetchData=fetchData;
 exports.executeQuery=executeQuery;
-
-
-

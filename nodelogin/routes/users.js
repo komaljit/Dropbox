@@ -35,7 +35,6 @@ const genRandomString = function(length){
  * @param {string} salt - Data to be validated.
  */
 
-
 function saltHashPassword(userpassword) {
     let salt = genRandomString(16); /** Gives us salt of length 16 *;
    /* console.log('UserPassword = '+userpassword);
@@ -57,11 +56,8 @@ router.get('/', function (req, res) {
         contactno: '',
         interests:'',
         lastlogin:'',
-
         files :[],
-
         groups: [],
-
         userlog:[]
 
     };
@@ -76,11 +72,8 @@ router.get('/', function (req, res) {
         }
         else
         {
-
             if(results.length > 0){
-
                 console.log("valid Login");
-
                 //res.send({"result":result});
                 userdetails.firstname=results[0].firstname;
                 userdetails.lastname=results[0].lastname;
@@ -88,27 +81,20 @@ router.get('/', function (req, res) {
                 userdetails.contactno=results[0].contact;
                 userdetails.interests=results[0].interests;
                 userdetails.lastlogin=results[0].lastlogin;
-
                 let getFiles="select distinct f.* from files f, userfiles u where u.email='"+email+"' " +
                                 "and (f.filepath=u.filepath or u.filepath=f.fileparent)";
                 console.log("Query is:"+getUser);
-
                 mysql.fetchData(function(err,fileresults){
                     if(err){
                         throw err;
                     }
                     else
                     {
-
                         if(results.length > 0){
-
                             userdetails.files=fileresults;
-
                         }
-
                         let getUserLog="select * from userlog where email='"+email+"'";
                         console.log("Query is:"+getUserLog);
-
                         mysql.fetchData(function(err,userlogresults){
                             if(err){
                                 throw err;
@@ -121,23 +107,17 @@ router.get('/', function (req, res) {
                                 console.log(userdetails);
                                 res.send({"userdetails":userdetails, "status":201});
                             }
-
                         },getUserLog);
                     }
-
                 },getFiles);
-
             }
             else {
-
                 console.log("Invalid Login");
                 res.status(401).json({message: "Login failed"});
             }
         }
     },getUser);
-
 });
-
 
 router.post('/', function (req, res) {
     let reqEmail = req.body.email;
@@ -152,14 +132,10 @@ router.post('/', function (req, res) {
         }
         else
         {
-
             if(results.length > 0){
                 req.session.email = reqEmail;
                 console.log("valid Login");
-
                 let insertUser="update users  set lastlogin = NOW() where email='"+reqEmail+"'";
-
-
                 mysql.executeQuery(function(err){
                     if(err){
                         console.log("Error inserting last login....")
@@ -172,15 +148,12 @@ router.post('/', function (req, res) {
                 },insertUser);
             }
             else {
-
                 console.log("Invalid Login");
                 res.send({status:401});
             }
         }
     },getUser);
-
 });
-
 
 router.post('/signup', function (req, res) {
     let reqPassword = saltHashPassword(req.body.password);
@@ -192,9 +165,7 @@ router.post('/signup', function (req, res) {
     let insertUser="insert into users (firstname, lastname, password, email) values ( '"+reqfirstname
         +"' ,'" + reqlastname +"','" +
         reqPassword+ "','" + reqemail+"')";
-
     console.log("Query is:"+insertUser);
-
     mysql.executeQuery(function(err){
         if(err){
             res.status(401).json({message: "SignUp failed"});
@@ -204,17 +175,13 @@ router.post('/signup', function (req, res) {
             let fs = require('fs');
             let splitemail=reqemail.split('.')[0];
             let dir = './public/uploads/'+splitemail;
-
             if (!fs.existsSync(dir)){
-
                 fs.mkdirSync(dir);
             }
             res.status(201).json({message: "User Details Saved successfully"});
         }
     },insertUser);
 });
-
-
 
 router.post('/updateuser', function (req, res) {
     console.log(req.body);
@@ -225,9 +192,7 @@ router.post('/updateuser', function (req, res) {
     let email = req.body.email;
     let updateUser="update users set firstname = "+"'"+ firstname+"'"+", lastname="+ "'"+lastname+"'"+", contact="+
         "'"+contact+"'"+", interests="+"'"+interests+"'"+" where email="+"'"+email+"'";
-
-    console.log("Query is:"+updateUser);
-
+    // console.log("Query is:"+updateUser);
     mysql.executeQuery(function(err){
         if(err){
             console.log(err);
@@ -235,13 +200,10 @@ router.post('/updateuser', function (req, res) {
         }
         else
         {
-
             res.status(201).send();
-
         }
     },updateUser);
 });
-
 
 //Logout the user - invalidate the session
 router.post('/logout', function (req, res) {
@@ -249,6 +211,5 @@ router.post('/logout', function (req, res) {
     console.log('Session destroyed');
     res.status(201).send();
 });
-
 
 module.exports = router;
