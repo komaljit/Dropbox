@@ -4,7 +4,6 @@ import { Route, withRouter } from 'react-router-dom';
 import '../Login.css';
 import PropTypes from 'prop-types';
 
-
 class SignUp extends Component {
     static propTypes = {
         signUp: PropTypes.func.isRequired

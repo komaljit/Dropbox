@@ -8,7 +8,6 @@ import UserLog from "./UserLog";
 import dropbox from "./dropbox-img.png";
 import dropboxtitle from "./Dropbox_Log.png";
 
-
 class NewerHomePage extends Component {
 
     render() {
@@ -18,14 +17,9 @@ class NewerHomePage extends Component {
                     <div className="jumbotron">
                        <div className="row justify-content-md-center">
                             <div className="col-md-6">
-
-                                <img className="" src={dropboxtitle}
-                                     alt="" height="70"/>
-
+                                <img className="" src={dropboxtitle} alt="" height="70"/>
                                 <br/><br/><br/>
-
-                                <img className="" src={dropbox}
-                                     alt="" />
+                                <img className="" src={dropbox} alt="" />
                             </div>
                             <div className="col-md-4">
                                 <Container/>

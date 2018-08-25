@@ -6,11 +6,9 @@ import {Row,Col,ListGroupItem} from 'react-bootstrap';
 import {afterlogin} from "../actions/index";
 import { Route, withRouter } from 'react-router-dom';
 import Header from "./Header";
-
 // Import React Table
 import ReactTable from "react-table";
 import "react-table/react-table.css";
-
 
 class UserLog extends Component {
 
@@ -22,10 +20,8 @@ class UserLog extends Component {
                 if (res.status === 201) {
                     this.props.afterlogin(res.userdetails);
                     console.log("Success...")
-
                 }else if (res.status === 401) {
                     this.setState({
-
                         message: "Folder error"
                     });
                 }
@@ -42,9 +38,7 @@ class UserLog extends Component {
 
                     <div className="account-wall col-md-10">
                         <div className="col-md-12">
-
                             <h2>User Log</h2>
-
                             <ReactTable
                                 data={this.props.userdata.userLog}
                                 columns={[
@@ -56,7 +50,6 @@ class UserLog extends Component {
                                             }
                                         ]
                                     },
-
                                     {
                                         Header: "File Path",
                                         columns: [
@@ -65,7 +58,6 @@ class UserLog extends Component {
                                             }
                                         ]
                                     },
-
                                     {
                                         Header: "File Type",
                                         columns: [
@@ -74,7 +66,6 @@ class UserLog extends Component {
                                             }
                                         ]
                                     },
-
                                     {
                                         Header: "Activity",
                                         columns: [
@@ -83,7 +74,6 @@ class UserLog extends Component {
                                             }
                                         ]
                                     },
-
                                     {
                                         Header: "Activity Time",
                                         columns: [
@@ -92,12 +82,10 @@ class UserLog extends Component {
                                             }
                                         ]
                                     }
-
                                 ]}
                                 defaultPageSize={5}
                                 className="-striped -highlight"
                             />
-
 
                     </div>
                         <br/>
@@ -106,14 +94,12 @@ class UserLog extends Component {
                             Back
                         </button>
                     </div>
-
                 </div>
             </div>
             </div>
         );
     }
 }
-
 
 function mapStateToProps(userdata) {
     console.log(userdata);

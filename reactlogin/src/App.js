@@ -1,9 +1,7 @@
 import React, {Component} from 'react';
 import './App.css';
-
 import {BrowserRouter} from 'react-router-dom';
 import NewerHomePage from "./components/NewerHomePage";
-
 
 class App extends Component {
     render() {
@@ -17,4 +15,4 @@ class App extends Component {
     }
 }
 
-    export default App;
+export default App;

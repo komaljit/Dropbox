@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import {Link,withRouter} from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-
 class Welcome extends Component {
     static propTypes = {
         username: PropTypes.string.isRequired

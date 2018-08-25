@@ -4,9 +4,7 @@ import Modal from 'react-modal';
 import {Row,Col,ListGroupItem} from 'react-bootstrap';
 
 class RightNavBar extends Component {
-
     state = { isModalOpen: false, foldername:'', fileparent:'', isfile:'F' , shareEmail:'', clickSharedFolder:false}
-
 
     openModal() {
         this.setState({ isModalOpen: true , fileparent:this.props.parentFile})
@@ -14,12 +12,9 @@ class RightNavBar extends Component {
 
     closeModal(data) {
         console.log(data);
-
         {data !== ""?
-
             ( data.foldername !== "" ?(data.shareEmail !== ""? this.props.makeSharedFolder(data):this.props.makeFolder(data))
             :''):''}
-
         this.setState({ isModalOpen: false, clickSharedFolder: false})
     }
 
@@ -39,7 +34,7 @@ class RightNavBar extends Component {
     };
 
     render(){
-console.log(this.props.parentFile);
+        console.log(this.props.parentFile);
         return(
         <div className="col-sm-2 sidenav">
             { this.props.parentFile === ""?
@@ -49,17 +44,17 @@ console.log(this.props.parentFile);
                 </button>:''
             }
                 <hr/>
-            <button className="btn btn-primary btn-block" type="submit"
+                <button className="btn btn-primary btn-block" type="submit"
                     onClick={() => this.openModal()}>
                 New Folder
-            </button>
-            <br/>
-            <Modal isOpen={this.state.isModalOpen} style={this.style} onClose={() => this.closeModal()}>
+                </button>
+                <br/>
+                <Modal isOpen={this.state.isModalOpen} style={this.style} onClose={() => this.closeModal()}>
                 <ListGroupItem>
                     <Row className="show-grid">
                         <Col md={4}>FolderName:</Col>
-                        <Col md={8}>
-                            <input type="text" className="form-control" required="true" autoFocus
+                            <Col md={8}>
+                                <input type="text" className="form-control" required="true" autoFocus
                                    onChange={(event) => {
                                        this.setState({
                                            foldername: event.target.value

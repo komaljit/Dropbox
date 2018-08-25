@@ -11,21 +11,21 @@ class Container extends Component {
         login: "SI",
         message: ''
     };
+
     login = (userdata) =>{
-        API.doLogin(userdata)
-            .then((res)  => {
-                if (res.status === 201) {
-                    localStorage.setItem("email", res.email );
-                    this.props.history.push("/files");
-                } else if (res.status === 401) {
-                    this.setState({
-                        message: "Wrong username or password. Try again..!!"
-                    });
-                }
-            });
+        API.doLogin(userdata).then((res) => {
+            if (res.status === 201){
+                localStorage.setItem("email", res.email );
+                this.props.history.push("/files");
+            } else if (res.status === 401){
+                this.setState({
+                    message: "Wrong username or password. Try again..!!"
+                });
+            }
+        });
     };
 
-    loginOrSignup = (data) => {
+    loginOrSignup = (data)=> {
         console.log(data);
         this.setState({
             message:'',
@@ -34,18 +34,17 @@ class Container extends Component {
     };
 
     signUp = (userdata) =>{
-        API.createUser(userdata)
-            .then((status)  => {
-                if (status === 201) {
-                    this.setState({
-                        message: "User details saved successfully!"
-                    });
-                } else if (status === 401) {
-                    this.setState({
-                        message: "Email already exists!"
-                    });
-                }
-            });
+        API.createUser(userdata).then((status) => {
+            if (status === 201) {
+                this.setState({
+                    message: "User details saved successfully!"
+                });
+            } else if (status === 401) {
+                this.setState({
+                    message: "Email already exists!"
+                });
+            }
+        });
     };
 
     render() {
@@ -58,17 +57,15 @@ class Container extends Component {
                 }
                 <div className="account-wall">
                     <div className="col-md-12">
-
                         {this.state.login === "SU" ?
                             <SignUp signUp={this.signUp} loginOrSignup={this.loginOrSignup}/>
                             :
                             <Login login={this.login} loginOrSignup={this.loginOrSignup}/>
                         }
-
                     </div>
                 </div>
             </div>
-    );
+        );
 
     }
 }

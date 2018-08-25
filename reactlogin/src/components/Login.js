@@ -3,7 +3,6 @@ import '../Login.css';
 //import PropTypes from 'prop-types';
 import dropbox from "./dropboxplus.gif";
 
-
 //login class component for dropbox
 class Login extends Component {
 /*
@@ -16,13 +15,11 @@ class Login extends Component {
         password: ''
     };
 
-
     render() {
         return (
             <div>
                 <img className="profile-img" src={dropbox}
                      alt=""/>
-
                 <input type="email" className="form-control" placeholder="Email" required autoFocus
                        onChange={(event) => {
                            this.setState({
@@ -36,14 +33,12 @@ class Login extends Component {
                                password: event.target.value
                            });
                        }}/>
-
                 <br/>
                 <button className="btn btn-primary btn-block" type="submit"
                         onClick={() => this.props.login(this.state)}>
                     Sign in
                 </button>
                 <br/>
-
                 <a href="" className="pull-right need-help">Need help? </a>
                 <a href="#" className="text-center new-account" onClick={() => this.props.loginOrSignup("SU")}>Create New User</a>
 

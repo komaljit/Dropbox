@@ -4,7 +4,6 @@ import * as API from '../api/API';
 import '../Login.css';
 import dropboxtitle from "./Dropbox_Log.png";
 
-
 class Header extends Component {
 
     logout=() => {
@@ -18,7 +17,7 @@ class Header extends Component {
                         console.log("logout issue")
                 }
             });
-    };
+        };
 
     render() {
         return (
@@ -31,7 +30,6 @@ class Header extends Component {
                         </div>
                         <ul className="nav navbar-nav">
                             <div className="row">
-
                                 <li className="active">Welcome <a href="#" onClick={() => this.props.history.push("/userdetails")}>
                                      {localStorage.getItem("email").split('@')[0]}</a>,</li>
                                 <div className="col-md-1" ></div>
@@ -46,7 +44,6 @@ class Header extends Component {
                     </div>
                 </nav>
             </div>
-
         );
     }
 }

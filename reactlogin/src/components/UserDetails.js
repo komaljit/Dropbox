@@ -8,13 +8,11 @@ import {updateUser  } from "../actions/index";
 import { Route, withRouter } from 'react-router-dom';
 import Header from "./Header";
 
-
 class UserDetails extends Component {
 
     componentWillMount(){
         const data=localStorage.getItem("email");
-        API.getState(data)
-            .then((res) => {
+        API.getState(data).then((res) => {
                 console.log(res);
                 if (res.status === 201) {
                     this.props.afterlogin(res.userdetails);
@@ -24,29 +22,23 @@ class UserDetails extends Component {
 
                 }
             });
-    }
+        }
 
     updateUser=(data) => {
         console.log(data);
         data.email=this.props.userdata.email;
-        API.updateUser(data)
-            .then((status) => {
-
+        API.updateUser(data).then((status) => {
                 if (status === 201) {
-
                     this.props.updateUser(data);
                     this.setState({
                         editClicked:false,
                         message: "User details update successfully!"
                     });
-
-
                 }else if (status === 401) {
                     this.setState({
                         editClicked:false,
                         message: "Error in updating user details!"
                     });
-
                 }
             });
     };
@@ -58,19 +50,14 @@ class UserDetails extends Component {
             <div>
                 <Header/>
             <div className="jumbotron">
-
             <div className="container-fluid row justify-content-md-center">
-
                 <div className="account-wall col-md-7">
                     <div className="col-md-12">
-
                         <h2>User Details</h2>
-
                         <table className="table table-user-information ">
                             <tbody >
                             <tr>
                                 <td>First Name:</td>
-
                                 <td>
                                     {
                                     this.state.editClicked === false ? this.props.userdata.firstName :
@@ -84,8 +71,6 @@ class UserDetails extends Component {
                                 } </td>
 
                             </tr>
-
-
                                 <tr>
                                     <td>Last Name:</td>
                                     <td>
@@ -131,19 +116,13 @@ class UserDetails extends Component {
                                                             });
                                             }}/>
                                     } </td>
-
                             </tr>
-
                             </tbody>
                         </table>
-
                         <br/>
-
                         <div className="row justify-content-md-center">
-
                             <div className="col-md-5">
                                 {this.state.editClicked === true ?
-
                                     <button className="btn btn-primary" type="submit"
                                             onClick={() => this.updateUser(this.state)}>
                                         Save
@@ -163,19 +142,14 @@ class UserDetails extends Component {
                                 </button>
                             </div>
                         </div>
-
                     </div>
-
                 </div>
-
             </div>
-
             </div>
             </div>
         );
     }
 }
-
 
 function mapStateToProps(userdata) {
 console.log(userdata);
@@ -188,6 +162,5 @@ function mapDispatchToProps(dispatch) {
         afterlogin : (data) => dispatch(afterlogin(data))
     };
 }
-
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(UserDetails));

@@ -3,7 +3,6 @@ import {ADDFILE} from "../actions/index";
 import {DELETE_FILE} from "../actions/index";
 import {UPDATE_USER} from "../actions/index";
 
-
 // https://github.com/reactjs/react-redux/blob/d5bf492ee35ad1be8ffd5fa6be689cd74df3b41e/sc/components/createConnect.js#L91
 const initialState = {
     firstName: '',
@@ -66,6 +65,5 @@ const userdata = (state = initialState, action) => {
             return state;
     }
 };
-
 
 export default userdata;

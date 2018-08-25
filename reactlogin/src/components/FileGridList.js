@@ -2,11 +2,9 @@ import React, {Component} from 'react';
 import {Row,Col,ListGroupItem} from 'react-bootstrap';
 import Modal from 'react-modal';
 import '../FileUpload.css';
-
 // Import React Table
 import ReactTable from "react-table";
 import "react-table/react-table.css";
-
 
 class FileGridList extends Component {
     state = { isModalOpen: false, shareEmail:'', file:'' , group:[], downloadLink:''};
@@ -128,9 +126,7 @@ class FileGridList extends Component {
                             </Col>
 
                         </Row>
-
                         <Row className="show-grid">
-
                                 {
                                     this.state.showLink === true?
                                         <h6><small>{this.state.downloadLink}</small></h6>
@@ -149,15 +145,11 @@ class FileGridList extends Component {
                             <button className="btn btn-primary" type="submit"
                                     onClick={() => this.closeModal('')}>Close</button>
                         </div>
-
                     </div>
-
                 </Modal>
-
         </div>
         );
     }
 }
-
 
 export default FileGridList;
