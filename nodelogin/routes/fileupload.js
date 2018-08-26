@@ -4,7 +4,7 @@ const multer = require('multer');
 const glob = require('glob');
 const mysql = require('./mysql');
 const fs = require('fs');
-
+const sql = require('mysql');
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, './public/uploads/')
@@ -18,9 +18,9 @@ const storage = multer.diskStorage({
 const upload = multer({storage:storage});
 
 router.get('/',  function (req, res) {
-    console.log(req.query.filedata);
+    // console.log(req.query.filedata);
     let filedata=req.query.filedata;
-    console.log(filedata);
+    // console.log(filedata);
     res.download(filedata.filepath, filedata.filename);
 });
 
@@ -30,8 +30,7 @@ router.post('/delete', function (req, res) {
     let isfile = req.body.file.isfile;
     let filepath= req.body.file.filepath;
     let email=req.body.email;
-    let findAdmin="select * from userfiles where email='"+email+"' and filepath='"+filepath+"' and admin='T'";
-    console.log("Query is:"+findAdmin);
+    let findAdmin="select * from userfiles where email="+sql.escape(email)+" and filepath="+sql.escape(filepath)+" and admin='T'";
 
     mysql.fetchData(function(err,results) {
         if (err) {
@@ -39,7 +38,7 @@ router.post('/delete', function (req, res) {
         }
         else {
             if (results.length > 0) {
-                let deleteUserFile = "delete from userfiles where filepath = '" + filepath + "'";
+                let deleteUserFile = "delete from userfiles where filepath =" + sql.escape(filepath);
                 console.log("Query deleteFile is:" + deleteUserFile);
 
                 let execQuery = 'T';
@@ -61,7 +60,7 @@ router.post('/delete', function (req, res) {
                             res.send({"status": 401});
                         }
                         else {
-                            let deleteFile = "delete from files where filepath = '" + filepath + "'";
+                            let deleteFile = "delete from files where filepath =" + sql.escape(filepath);
                             console.log("Query deleteFile is:" + deleteFile);
                             mysql.executeQuery(function (err) {
                                 if (err) {
@@ -72,8 +71,8 @@ router.post('/delete', function (req, res) {
                                 }
                             }, deleteFile);
 
-                            var userlog = "insert into userlog (filename, filepath, isfile, email, action, actiontime) values ( '" + filename
-                                + "' ,'" + filepath + "','" + isfile + "','" + email + "','" +
+                            var userlog = "insert into userlog (filename, filepath, isfile, email, action, actiontime) values ( '" + sql.escape(filename)
+                                + "," + sql.escape(filepath) + "," + sql.escape(isfile) + "," + sql.escape(email) + "," +
                                 "File Delete" + "',NOW())";
 
                             mysql.executeQuery(function (err) {
@@ -117,8 +116,8 @@ router.post('/upload', upload.single('mypic'), function (req, res) {
     fs.createReadStream('./public/uploads/'+req.file.filename).pipe(fs.createWriteStream(filepath));
 
     // check user already exists
-    let insertFile="insert into files (filename, filepath, fileparent, isfile) values ( '"+filename
-        +"' ,'" + filepath+"' ,'" + fileparent+"','" + isfile+"')";
+    let insertFile="insert into files (filename, filepath, fileparent, isfile) values ("+sql.escape(filename)
+        +"," + sql.escape(filepath)+"," + sql.escape(fileparent)+"," + sql.escape(isfile)+")";
 
     console.log("Query is:"+insertFile);
     mysql.executeQuery(function(err){
@@ -128,7 +127,7 @@ router.post('/upload', upload.single('mypic'), function (req, res) {
         }
         else
         {
-            let insertUserFile="insert into userfiles  (filepath, email, admin)  values ( '"+filepath+"' ,'" + req.body.email+"' ,'T')";
+            let insertUserFile="insert into userfiles  (filepath, email, admin)  values ("+sql.escape(filepath)+"," + sql.escape(req.body.email)+",'T')";
             console.log("Query insertUserFile is:"+insertUserFile);
             mysql.executeQuery(function(err){
                 if(err){
@@ -141,8 +140,8 @@ router.post('/upload', upload.single('mypic'), function (req, res) {
                 }
             },insertUserFile);
 
-            let userlog="insert into userlog (filename, filepath, isfile, email, action, actiontime) values ( '"+filename
-                +"' ,'" + filepath +"','"+ isfile +"','" + req.body.email +"','" +
+            let userlog="insert into userlog (filename, filepath, isfile, email, action, actiontime) values ("+sql.escape(filename)
+                +"," + sql.escape(filepath) +","+ sql.escape(isfile) +"," + sql.escape(req.body.email) +"," +
                 "File Upload"+ "',NOW())";
             mysql.executeQuery(function(err){
                 if(err){
@@ -179,8 +178,8 @@ router.post('/makefolder', function (req, res) {
         fs.mkdirSync(dir);
     }
     // check user already exists
-    let insertFile="insert into files (filename, filepath, fileparent, isfile) values ( '"+filename
-        +"' ,'" + filepath+"' ,'" + fileparent+"','" + isfile+"')";
+    let insertFile="insert into files (filename, filepath, fileparent, isfile) values ("+sql.escape(filename)
+        +"," + sql.escape(filepath)+"," + sql.escape(fileparent)+"," + sql.escape(isfile)+")";
 
     console.log("Query is:"+insertFile);
     mysql.executeQuery(function(err){
@@ -190,7 +189,7 @@ router.post('/makefolder', function (req, res) {
         }
         else
         {
-            let insertUserFile="insert into userfiles  (filepath, email, admin)  values ( '"+filepath+"' ,'" + req.body.email+"' ,'T')";
+            let insertUserFile="insert into userfiles  (filepath, email, admin)  values ("+sql.escape(filepath)+" ," + sql.escape(req.body.email)+" ,'T')";
             console.log("Query insertUserFile is:"+insertUserFile);
             mysql.executeQuery(function(err){
                 if(err){
@@ -202,8 +201,8 @@ router.post('/makefolder', function (req, res) {
                     console.log("data inserted in userfiles")
                 }
             },insertUserFile);
-            let userlog="insert into userlog (filename, filepath, isfile, email, action, actiontime) values ( '"+filename
-                +"' ,'" + filepath +"','"+ isfile +"','" + req.body.email +"','" +
+            let userlog="insert into userlog (filename, filepath, isfile, email, action, actiontime) values ("+sql.escape(filename)
+                +"," + sql.escape(filepath) +","+ sql.escape(isfile) +"," + sql.escape(req.body.email) +"," +
                 "Make Folder "+ "',NOW())";
             mysql.executeQuery(function(err){
                 if(err){
@@ -255,8 +254,8 @@ router.post('/sharefile', function (req, res) {
             }
             else {
                 console.log("data inserted in userfiles");
-                let userlog = "insert into userlog (filename, filepath, isfile, email, action, actiontime) values ( '" + filename
-                    + "' ,'" + filepath + "','" + isfile + "','" + userEmail + "','" +
+                let userlog = "insert into userlog (filename, filepath, isfile, email, action, actiontime) values (" + sql.escape(filename)
+                    + "," + sql.escape(filepath) + "," + sql.escape(isfile) + "," + sql.escape(userEmail) + "," +
                     "File Shared with " + shareEmail + "',NOW())";
                 mysql.executeQuery(function (err) {
                     if (err) {

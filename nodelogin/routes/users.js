@@ -3,6 +3,7 @@ const router = express.Router();
 const mysql = require('./mysql');
 const crypto = require('crypto');
 const fs = require('fs');
+const sql = require('mysql');
 
 
 /**
@@ -63,7 +64,7 @@ router.get('/', function (req, res, next) {
     };
 
     // check user exists or not
-    let getUser="select * from users where email='"+email+"'";
+    let getUser="select * from users where email=" + sql.escape(email);
     mysql.fetchData(function(err,results){
         if (err) {
                return next();
@@ -76,9 +77,9 @@ router.get('/', function (req, res, next) {
                 userdetails.contactno=results[0].contact;
                 userdetails.interests=results[0].interests;
                 userdetails.lastlogin=results[0].lastlogin;
-                let getFiles="select distinct f.* from files f, userfiles u where u.email='"+email+"' " +
+                let getFiles="select distinct f.* from files f, userfiles u where u.email="+sql.escape(email) +
                                 "and (f.filepath=u.filepath or u.filepath=f.fileparent)";
-                console.log("Query is:"+getUser);
+                // console.log("Query is:"+getUser);
                 mysql.fetchData(function(err,fileresults){
                     if (err) {
                         return next();
@@ -87,7 +88,7 @@ router.get('/', function (req, res, next) {
                         if(results.length > 0){
                             userdetails.files=fileresults;
                         }
-                        let getUserLog="select * from userlog where email='"+email+"'";
+                        let getUserLog="select * from userlog where email="+sql.escape(email);
                         console.log("Query is:"+getUserLog);
                         mysql.fetchData(function(err,userlogresults){
                             if (err) {
@@ -122,7 +123,7 @@ router.post('/', function (req, res) {
     let reqEmail = req.body.email;
     let reqPassword = saltHashPassword(req.body.password);
     // check user already exists
-    let getUser="select * from users where email='"+reqEmail+"' and password='" + reqPassword +"'";
+    let getUser="select * from users where email="+sql.escape(Email)+" and password="+ sql.escape(reqPassword);
     // console.log("Query is:"+getUser);
     mysql.fetchData(function(err,results){
         if(err){
@@ -132,7 +133,7 @@ router.post('/', function (req, res) {
         {
             if(results.length > 0){
                 console.log("valid Login");
-                let insertUser="update users  set lastlogin = NOW() where email='"+reqEmail+"'";
+                let insertUser="update users  set lastlogin = NOW() where email="+sql.escape(reqEmail);
                 mysql.executeQuery(function(err){
                     if(err){
                         console.log("Error inserting last login....")
@@ -160,9 +161,9 @@ router.post('/signup', function (req, res) {
     let reqemail = req.body.email;
     //var reqcontact = req.body.contactNo;
    // var reqinterests = req.body.interests;
-    let insertUser="insert into users (firstname, lastname, password, email) values ( '"+reqfirstname
-        +"' ,'" + reqlastname +"','" +
-        reqPassword+ "','" + reqemail+"')";
+    let insertUser="insert into users (firstname, lastname, password, email) values ("+sql.escape(reqfirstname)
+        +"," + sql.escape(reqlastname) +"," +
+        sql.escape(reqPassword)+ "," + sql.escape(reqemail)+")";
     console.log("Query is:"+insertUser);
     mysql.executeQuery(function(err){
         if(err){
@@ -188,8 +189,8 @@ router.post('/updateuser', function (req, res) {
     let contact = req.body.contactno;
     let interests = req.body.interests;
     let email = req.body.email;
-    let updateUser="update users set firstname = "+"'"+ firstname+"'"+", lastname="+ "'"+lastname+"'"+", contact="+
-        "'"+contact+"'"+", interests="+"'"+interests+"'"+" where email="+"'"+email+"'";
+    let updateUser="update users set firstname = "+ sql.escape(firstname)+",lastname="+ sql.escape(lastname)+", contact="+
+        sql.escape(contact)+", interests="+sql.escape(interests)+" where email="+sql.escape(email);
     // console.log("Query is:"+updateUser);
     mysql.executeQuery(function(err){
         if(err){
