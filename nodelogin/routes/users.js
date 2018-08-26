@@ -44,10 +44,11 @@ function saltHashPassword(userpassword) {
 }
 
 /* GET users listing. */
-router.get('/', function (req, res) {
-    console.log(req.query);
+router.get('/', function (req, res, next) {
+    if (req.session.email !==  req.query.email) {
+        return next();
+    };
     let email=req.query.email;
-
     let userdetails={
         firstname: '',
         lastname: '',
@@ -59,22 +60,16 @@ router.get('/', function (req, res) {
         files :[],
         groups: [],
         userlog:[]
-
     };
 
-    // check user already exists
+    // check user exists or not
     let getUser="select * from users where email='"+email+"'";
-    console.log("Query is:"+getUser);
-
     mysql.fetchData(function(err,results){
-        if(err){
-            throw err;
-        }
-        else
-        {
+        if (err) {
+               return next();
+           }
+        else {
             if(results.length > 0){
-                console.log("valid Login");
-                //res.send({"result":result});
                 userdetails.firstname=results[0].firstname;
                 userdetails.lastname=results[0].lastname;
                 userdetails.email=results[0].email;
@@ -85,47 +80,50 @@ router.get('/', function (req, res) {
                                 "and (f.filepath=u.filepath or u.filepath=f.fileparent)";
                 console.log("Query is:"+getUser);
                 mysql.fetchData(function(err,fileresults){
-                    if(err){
-                        throw err;
+                    if (err) {
+                        return next();
                     }
-                    else
-                    {
+                    else {
                         if(results.length > 0){
                             userdetails.files=fileresults;
                         }
                         let getUserLog="select * from userlog where email='"+email+"'";
                         console.log("Query is:"+getUserLog);
                         mysql.fetchData(function(err,userlogresults){
-                            if(err){
-                                throw err;
+                            if (err) {
+                                return next();
                             }
-                            else
-                            {
+                            else {
                                 if(results.length > 0){
                                     userdetails.userlog=userlogresults;
                                 }
                                 console.log(userdetails);
-                                res.send({"userdetails":userdetails, "status":201});
+                                res.status(200).send({"userdetails":userdetails});
                             }
                         },getUserLog);
                     }
                 },getFiles);
             }
             else {
-                console.log("Invalid Login");
-                res.status(401).json({message: "Login failed"});
+                return next();
             }
         }
     },getUser);
 });
+
+// middleware for handling invalid requests
+router.use('/', function(req, res) {
+    res.status(400).json({"error":"Invaid request"});
+    return res;
+});
+
 
 router.post('/', function (req, res) {
     let reqEmail = req.body.email;
     let reqPassword = saltHashPassword(req.body.password);
     // check user already exists
     let getUser="select * from users where email='"+reqEmail+"' and password='" + reqPassword +"'";
-    console.log("Query is:"+getUser);
-
+    // console.log("Query is:"+getUser);
     mysql.fetchData(function(err,results){
         if(err){
             throw err;
@@ -133,7 +131,6 @@ router.post('/', function (req, res) {
         else
         {
             if(results.length > 0){
-                req.session.email = reqEmail;
                 console.log("valid Login");
                 let insertUser="update users  set lastlogin = NOW() where email='"+reqEmail+"'";
                 mysql.executeQuery(function(err){
@@ -143,7 +140,8 @@ router.post('/', function (req, res) {
                     else
                     {
                         console.log("last login inserted....");
-                        res.send({"status":201, "email" :reqEmail});
+                        req.session.email = reqEmail;
+                        res.send({"status":204});
                     }
                 },insertUser);
             }

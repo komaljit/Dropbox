@@ -6,7 +6,7 @@ const mysql = require('mysql');
     const pool  = mysql.createPool({
         host     : 'localhost',
         user     : 'root',
-        password : '1234',
+        password : '1874@abc',
         database : 'cmpe273',
         port	 : 3306
     });
@@ -14,16 +14,11 @@ const mysql = require('mysql');
 }*/
 
 function fetchData(callback,sqlQuery){
-    console.log("\nSQL Query::"+sqlQuery);
+    // console.log("\nSQL Query::"+sqlQuery);
     pool.getConnection(function(err,connection) {
         connection.query(sqlQuery, function (err, rows, fields) {
-            if (err) {
-                console.log("ERROR: " + err.message);
-            }
-            else {	// return err or result
-                console.log("DB Results:" + rows);
-                callback(err, rows);
-            }
+            console.log("DB Results:" + rows);
+            callback(err, rows);
         });
         console.log("\nConnection closed..");
         connection.release();
@@ -33,6 +28,9 @@ function fetchData(callback,sqlQuery){
 function executeQuery(callback, sqlQuery){
     console.log("\nSQL Query::"+sqlQuery);
     pool.getConnection(function(err,connection) {
+        if (err) {
+            callback(err);
+        }
         connection.query(sqlQuery, function (err, result) {
             callback(err);
         });
