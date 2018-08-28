@@ -155,16 +155,21 @@ router.post('/', function (req, res) {
 });
 
 router.post('/signup', function (req, res) {
+
+    if ((typeof req.body.firstName || typeof req.body.lastName || typeof req.body.email) === 'undefined'){
+        return res.status(401).send("missing information");
+    }
+
     let reqPassword = saltHashPassword(req.body.password);
     let reqfirstname = req.body.firstName;
     let reqlastname = req.body.lastName;
     let reqemail = req.body.email;
     //var reqcontact = req.body.contactNo;
-   // var reqinterests = req.body.interests;
+    // var reqinterests = req.body.interests;
     let insertUser="insert into users (firstname, lastname, password, email) values ("+sql.escape(reqfirstname)
-        +"," + sql.escape(reqlastname) +"," +
-        sql.escape(reqPassword)+ "," + sql.escape(reqemail)+")";
+        +"," + sql.escape(reqlastname) +"," + sql.escape(toString(reqPassword))+ "," + sql.escape(reqemail)+")";
     console.log("Query is:"+insertUser);
+
     mysql.executeQuery(function(err){
         if(err){
             res.status(401).json({message: "SignUp failed"});
